@@ -20,11 +20,12 @@ def transTd(td, dics, idmap):
             'Descr': {
                 'LSS': ['NAME','CONTENT'],
                 'NAME': 'en:' + td['name'],
-                'CONTENT': _content
+                'CONTENT': _content,
+                'MW_ID': td['_id'],
             }
         },
         'rels': _rels
     }
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[td['_id']] = dic['_id']
 

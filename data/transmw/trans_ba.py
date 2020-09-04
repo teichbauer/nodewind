@@ -8,7 +8,7 @@ def transBa(ba, dics, idmap):
     _rels = {}
     rlt1 = 'META-RLT-PA2-PA1-1005'  # BA- has-male
     rlt2 = 'META-RLT-PA2-PA1-1006'  # BA- has-female
-    rlt3 = 'META-RLT-PA2-PA1-0007'  # BA-child relationship
+    rlt3 = 'META-RLT-PA2-PA1-1007'  # BA has-child PA1
     for k, v in ba['iddict'].items():
         if k == 'male':
             _rels[rlt1] = v # RL_HAS_MALE
@@ -26,9 +26,10 @@ def transBa(ba, dics, idmap):
             'Descr': {
                 'LSS': [],
                 'NAME':'',
+                'MW_ID': ba['_id']
             }
         },
         'rels': _rels
     }
     idmap[ba['_id']] = dic['_id']
-    dics.append(dic)
+    dics[dic['_id']] = dic

@@ -29,7 +29,7 @@ def transCe(ce, dics, idmap):
             }
             for p in ps:
                 dc['rels'][_relt].append(p)
-            dics.append(dc)
+            dics[dc['_id']] = dc
             ids.append(dc['_id'])
     if 'D' in ce:
         _subcat = '0002' # subcat for death-date
@@ -54,7 +54,7 @@ def transCe(ce, dics, idmap):
             }
             for p in ps:
                 dc['rels'][_relt].append(p)
-            dics.append(dc)
+            dics[dc['_id']] = dc
             ids.append(dc['_id'])
     if 'E' in ce:
         pass

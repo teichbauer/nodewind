@@ -38,10 +38,11 @@ def transIt(it, dics, idmap):
                 'LSS': ['NAME'],
                 'NAME': flatLSDic(it['name']),
                 'ACCESSLEVEL': access_level,
-                'TITLE': flatLSDic(it['title'])
+                'TITLE': flatLSDic(it['title']),
+                'MW_ID': it['_id'],
             }
         },
         'rels': _rels
     }
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[it['_id']] = dic['_id']

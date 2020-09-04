@@ -25,10 +25,11 @@ def transFc(fc, dics, idmap):
                 'NAME': flatLSDic(fc['name']),
                 'ANNO': flatLSDic(fc['anno']),
                 'TYPE': fc['type'],
-                'CONTDICT': flatLSDic(fc['contdict'])
+                'CONTDICT': flatLSDic(fc['contdict']),
+                'MW_ID': fc['_id'],
             }
         },
         'rels': _rels
     }
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[fc["_id"]] = dic['_id']

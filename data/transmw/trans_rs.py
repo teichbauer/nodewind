@@ -10,9 +10,11 @@ def transRs(rs, dics, idmap):
     _rlt2 = 'META-RLT-DC2-PA1-0009'  # DC2 owned-by PA1
     for k, v in rs['iddict'].items():
         if k == 'holders':
-            _rels[_rlt1] = v  # RL_CONTAINED_BY
-        elif k == "ownerpa":
-            _rels[_rlt2] = v  # RL_OWNED_BY
+            for i in v: # holder can be PA or FC
+                if i[8:10] == 'PA':    # PA owns this rs
+                    _rels.setdefault(_rlt2,[]).append(i)
+                elif i[8:10] != 'PA':  # FC contains this rs
+                    _rels.setdefault(_rlt1,[]).append(i)
     dic = {
         '_id': genID(_cid, _cat, _subcat),
         'cat': _cat,
@@ -27,10 +29,11 @@ def transRs(rs, dics, idmap):
                 'TITLE': rs['title'],
                 'SIZE': rs['size'],
                 'MIME': rs['mime'],
-                'DATA': rs['data']
+                'DATA': rs['data'],
+                'MW_ID': rs['_id'],
             }
         },
         'rels': _rels
     }
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[rs['_id']] = dic['_id']

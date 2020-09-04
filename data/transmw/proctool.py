@@ -2,6 +2,8 @@ import sys, os,time, random, string, re, json
 from base64 import b64encode, b64decode
 from glob import glob
 
+ROOT = '/home/{}/lab/nodewind/data/transmw'.format(os.environ["USER"])
+
 defaultLS = 'en'
 LSPattern = re.compile(r'\b(en|zh|de)\:')
 
@@ -86,16 +88,21 @@ def convertPk(pk):
     ]
 
 def b64LSExtract(msg, lang=defaultLS):
-    if type(msg) == type({}):
-        if lang in msg:
-            return b64DC(msg[lang])
-        elif len(msg) == 0:
-            return ''
-        else:
-            _lang = list(msg.keys())[0]
-            return b64DC(msg[_lang])
-    lst = msg.split('||')
     firstLS = ''
+    if type(msg) == type({}):
+        res = ''
+        for k, v in msg.items():
+            if k == lang and len(v) > 0:
+                res = b64DC(v)
+                break
+            if firstLS == '' and len(v) > 0:
+                firstLS = b64DC(v)
+        if len(res):
+            return res
+        return firstLS
+    
+    # msg is a || delimitted string
+    lst = msg.split('||')
     for e in lst:
         if e.count(':') > 0: # : in it
             _lang, m = e.split(':')
@@ -159,19 +166,23 @@ def parseEnts(cid, lst, constdic, objdic, mapdic):
                     obj['rels'][constdic[k]] = e['rels'][k]
         
         
-def fillRels(cid, dics, idmap):
-    objdic = {}
-    for d in dics:
+def fillRels(dics, idmap):
+    for d in dics.values():
         rels = d['rels']
         _rels = {}
         pairs = rels.items()
+        if d['cat'] == 'PA1':
+            x = 1
         for p in pairs:
             if len(p[1]) == 0:
                 continue
             if type(p[1]) == type([]):
                 ar = []
                 for av in p[1]:
+                    if type(av) != type(''):
+                        continue
                     if len(av) > 31:
+                        ar.append(av)
                         continue
                     av = av.strip('-+')
                     # elif av[-1] in ('-','+'):
@@ -189,35 +200,17 @@ def fillRels(cid, dics, idmap):
                     d['rels'][p[0]] = idmap[av]
                 else:
                     print("{} not in map".format(av))
-        objdic[d['_id']] = d
-    return objdic
+    return dics
 
-def saveJson(cid, objdic, mapdic):
-    with open("./{}/record0001.json".format(cid), 'w') as ofile:
+def saveJson(dirname, objdic, mapdic, mwents=None):
+    with open(dirname + "/record0001.json", 'w') as ofile:
         ofile.write(json.dumps(objdic, indent=4))
 
-    with open("./{}/initmap.json".format(cid),'w') as ofile:
+    with open(dirname + "/initmap.json",'w') as ofile:
         ofile.write(json.dumps(mapdic, indent=4))
-
-def proc(cid, ver="initial"):
-    consts = getRLTConsts()
-    lst = glob('./{}/{}/*'.format(cid,ver))
-    flst = []
-    for fname in lst:
-        splt = fname.split('/')
-        if splt[-1].endswith('py'):
-            flst.append(fname)
-    objDic = {}
-    mapDic = {}
-    for fi in flst:
-        data = open(fi).read()
-        lst = eval(data)
-        parseEnts(cid, lst, consts, objDic, mapDic)
-    
-    fillRels(objDic, mapDic)
-    saveJson(cid, objDic, mapDic)
-    # print(consts)
-    
+    if mwents:
+        with open(dirname + "/oldmw.json",'w') as ofile:
+            ofile.write(json.dumps(mwents, indent=4))    
 
 if __name__ == '__main__':
-    proc('TC6H')
+    print('hi')

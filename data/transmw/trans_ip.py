@@ -28,10 +28,11 @@ def transIp(ip, dics, idmap):
                 'LSS': ['NAME'],
                 'NAME': flatLSDic(ip['title']),
                 'ACCESSLEVEL': access_level,
+                'MW_ID': ip['_id'],
             }
         },
         'rels': _rels
     }
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[ip['_id']] = dic['_id']
 

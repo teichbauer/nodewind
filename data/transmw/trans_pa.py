@@ -63,11 +63,11 @@ def transPa(pa, dics, idmap):
     _rlt5 = 'META-RLT-PA1-AC1-1008'  # PA1 owning account AC1
     for k, v in pa.get('iddict',{}).items():
         if k == "nutshell":
-            _rels[_rlt1] = v # RL_OWNING nutshell
+            _rels.setdefault(_rlt1, []).append(v) # RL_OWNING nutshell
         elif k == "parents":
             _rels[_rlt2] = v # RL_CHILD_OF
         elif k == "portrait":
-            _rels[_rlt1] = v # RL_OWNING portrait
+            _rels.setdefault(_rlt1,[]).append(v) # RL_OWNING portrait
         elif k == "spouses":
             _rels[_rlt3] = v # RL_HAS_MARR_BOND
         elif k == "ips":
@@ -89,7 +89,8 @@ def transPa(pa, dics, idmap):
                 'POB': flatLSDic(pa.get('pob','')),
                 'POD': flatLSDic(pa.get('pod','')),
                 'GENDER': pa.get('sex','male'),
-                'ROLE': pa.get('role','1'),                
+                'ROLE': pa.get('role','1'),
+                'MW_ID': pa['_id'],
             }
         },
         'rels': _rels
@@ -99,9 +100,9 @@ def transPa(pa, dics, idmap):
     
     if 'cfg' in pa: # theme
         ac1 = makeAC1(_cid, pa)
-        dic['rels'][_rlt5] = ac1['_id']
-        dics.append(ac1)
+        dic['rels'][_rlt5] = [ac1['_id']]
+        dics[ac1['_id']] = ac1
         
-    dics.append(dic)
+    dics[dic['_id']] = dic
     idmap[pa['_id']] = dic['_id']
 
