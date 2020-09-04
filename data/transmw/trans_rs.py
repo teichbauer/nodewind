@@ -1,4 +1,5 @@
 from proctool import genID, currentTS
+from constrlts import get_RLT_id
 
 def transRs(rs, dics, idmap):
     _id = rs['_id']
@@ -6,8 +7,8 @@ def transRs(rs, dics, idmap):
     _cat = 'DC2'
     _subcat = '0004' # media file
     _rels = {}
-    _rlt1 = 'META-RLT-DC2-DC2-0009'  # DC2 contained by DC2
-    _rlt2 = 'META-RLT-DC2-PA1-0009'  # DC2 owned-by PA1
+    _rlt1 = get_RLT_id('CONTAINED_BY', _cat, 'DC2') # DC2 contained by DC2
+    _rlt2 = get_RLT_id('OWNED_BY',_cat, 'PA1')      # DC2 owned-by PA1
     for k, v in rs['iddict'].items():
         if k == 'holders':
             for i in v: # holder can be PA or FC

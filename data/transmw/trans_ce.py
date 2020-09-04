@@ -1,11 +1,12 @@
 from proctool import b64DC, b64EC, genID, currentTS
+from constrlts import get_RLT_id
 
 def transCe(ce, dics, idmap):
     _id = ce['_id']
     ids = []
     _cid = _id[:7]  #_id = 'TC6H8EU-CE-01'
     _cat = 'RE1'    # recurring event
-    _relt = 'META-RLT-RE1-PA1-0008' # RL_OWNED_BY (PA1)
+    _relt = get_RLT_id('OWNED_BY', _cat, 'PA1') # META-RLT-RE1-PA1-0008
     if 'B' in ce:
         _subcat = '0001'   # subcat of RE1 for birth-date
         for dat, ps in ce['B'].items():  #dat: D17

@@ -1,4 +1,5 @@
 from proctool import genID, currentTS
+from constrlts import get_RLT_id
 
 def transBa(ba, dics, idmap):
     _id = ba['_id']
@@ -6,9 +7,9 @@ def transBa(ba, dics, idmap):
     _cat = 'PA2'
     _subcat = '0000'
     _rels = {}
-    rlt1 = 'META-RLT-PA2-PA1-1005'  # BA- has-male
-    rlt2 = 'META-RLT-PA2-PA1-1006'  # BA- has-female
-    rlt3 = 'META-RLT-PA2-PA1-1007'  # BA has-child PA1
+    rlt1 = get_RLT_id("HAS_MALE", _cat, "PA1")   #'META-RLT-PA2-PA1-1005'
+    rlt2 = get_RLT_id("HAS_FEMALE", _cat, "PA1") #'META-RLT-PA2-PA1-1006'
+    rlt3 = get_RLT_id("HAS_CHILD",_cat, "PA1")   # META-RLT-PA2-PA1-1007'
     for k, v in ba['iddict'].items():
         if k == 'male':
             _rels[rlt1] = v # RL_HAS_MALE

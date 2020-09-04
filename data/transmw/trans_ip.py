@@ -1,4 +1,5 @@
 from proctool import genID, currentTS, b64LSExtract, flatLSDic, convertPk
+from constrlts import get_RLT_id
 
 def transIp(ip, dics, idmap):
     _id = ip['_id']
@@ -7,9 +8,9 @@ def transIp(ip, dics, idmap):
     _subcat = '0003'
     access_level = convertPk(ip.get('pk','M7117'))
     _rels = {}
-    _rlt1 = 'META-RLT-DC2-PA1-0008'  # RL_OWNED_BY
-    _rlt2 = 'META-RLT-DC1-DC1-1009'  # RL_CONTAINING folder(DC1)
-    _rlt3 = 'META-RLT-DC1-DC2-1009'  # RL_CONTAINING doc(DC2)
+    _rlt1 = get_RLT_id('OWNED_BY', _cat, "PA1") # META-RLT-DC2-PA1-0008
+    _rlt2 = get_RLT_id('CONTAINS', _cat, 'DC1') # META-RLT-DC1-DC1-1009 
+    _rlt3 = get_RLT_id('CONTAINS', _cat, 'DC2') # META-RLT-DC1-DC2-1009
     for k, v in ip['iddict'].items():
         if k == 'owner':
             _rels[_rlt1] = v  # owned-by PA1

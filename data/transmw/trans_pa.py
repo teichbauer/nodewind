@@ -1,4 +1,5 @@
 from proctool import genID, currentTS, b64LSExtract, flatLSDic
+from constrlts import get_RLT_id
 
 def makeAC1(_cid, pa):
     if 'M7519' in pa['cfg']:
@@ -45,7 +46,7 @@ def makeAC1(_cid, pa):
             }
         },
         'rels': {
-            _cid + "-LRT-AC1-PA1-0008":[pa['_id']] # RL_OWNED_BY
+            get_RLT_id('OWNED_BY', 'AC1', 'PA1'): [pa['_id']] # RL_OWNED_BY
         }
     }
     return ac1
@@ -56,11 +57,15 @@ def transPa(pa, dics, idmap):
     _cat = 'PA1'
     _subcat = 'AUEA'
     _rels = {}
-    _rlt1 = 'META-RLT-PA1-DC2-1008'  # PA1 owning doc
-    _rlt2 = 'META-RLT-PA1-PA2-0007'  # PA1 child-of PA2
-    _rlt3 = 'META-RLT-PA1-PA2-100I'  # PA1 has marriage-bond
-    _rlt4 = 'META-RLT-PA1-DC1-1008'  # PA1 owning folder(DC1)
-    _rlt5 = 'META-RLT-PA1-AC1-1008'  # PA1 owning account AC1
+    sex = pa['sex']
+    _rlt1 = get_RLT_id('OWNS', _cat,'DC2')      # PA1 owning doc
+    _rlt2 = get_RLT_id('CHILD_OF', _cat, 'PA2') # PA1 child-of PA2
+    if sex == 'male':
+        _rlt3 = get_RLT_id('MALE_OF','PA1','PA2')  # PA1 male of marriage-bond
+    else:
+        _rlt3 = get_RLT_id('FEMALE_OF','PA1','PA2')   # PA1 female of PA2
+    _rlt4 = get_RLT_id('OWNS','PA1','DC1')            # PA1 owns folder(DC1)
+    _rlt5 = get_RLT_id('OWNS','PA1','AC1')            # PA1 owns account AC1
     for k, v in pa.get('iddict',{}).items():
         if k == "nutshell":
             _rels.setdefault(_rlt1, []).append(v) # RL_OWNING nutshell

@@ -1,4 +1,5 @@
 from proctool import genID, currentTS, b64LSExtract, flatLSDic
+from constrlts import get_RLT_id
 
 def transFc(fc, dics, idmap):
     _id = fc['_id']
@@ -6,13 +7,13 @@ def transFc(fc, dics, idmap):
     _cat = 'DC2'
     _subcat = '0001'
     _rels = {}
-    _relt1 = "META-RLT-DC2-DC2-1009" # DC2(fc) containing (rs)
-    _relt2 = "META-RLT-DC2-DC2-0009" # DC2(fc) contained-by DC2(it)
+    _relt1 = get_RLT_id('CONTAINS', _cat, "DC2")     # META-RLT-DC2-DC2-1009
+    _relt2 = get_RLT_id('CONTAINED_BY', _cat, "DC2") # META-RLT-DC2-DC2-0009
     for k, v in fc['iddict'].items():
         if k == 'rs':
-            _rels[_relt1] = v  # RL_CONTAINING
+            _rels[_relt1] = v  # fc CONTAINS rs
         elif k == "owner":
-            _rels[_relt2] = v  # RL_CONTAINED_BY it
+            _rels[_relt2] = v  # fc CONTAINED_BY it
     dic = {
         '_id': genID(_cid, _cat, _subcat),
         'cat': _cat,

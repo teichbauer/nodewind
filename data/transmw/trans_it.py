@@ -1,4 +1,5 @@
 from proctool import genID, currentTS, b64LSExtract, flatLSDic, convertPk
+from constrlts import get_RLT_id
 
 def transIt(it, dics, idmap):
     _id = it['_id']
@@ -12,10 +13,10 @@ def transIt(it, dics, idmap):
         _subcat = '0002'    # multi-mime doc
     access_level = convertPk(it.get('pk','M7117'))
     _rels = {}
-    _rlt1 = 'META-LRT-' + _cat + 'DC1' + "1009"  # containing folder
-    _rlt2 = 'META-LRT-' + _cat + 'DC2' + "1009"  # containing doc
-    _rlt3 = 'META-LRT-' + _cat + 'DC1' + "0009"  # contained by DC1(folder)
-    _rlt4 = 'META-LRT-' + _cat + 'PA1' + "0008"  # owned by PA1
+    _rlt1 = get_RLT_id('CONTAINS', _cat, 'DC1')     # contains folder
+    _rlt2 = get_RLT_id('CONTAINS', _cat, 'DC2')     # contains doc
+    _rlt3 = get_RLT_id('CONTAINED_BY', _cat, 'DC1') # contained by DC1(folder)
+    _rlt4 = get_RLT_id('OWNED_BY', _cat, 'PA1')     # owned by PA1
     for k, v in it['iddict'].items():
         if k == 'folders':
             _rels[_rlt1] = v  # 1009: RL_CONTAINING

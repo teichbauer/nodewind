@@ -1,4 +1,5 @@
 from proctool import genID, currentTS, flatLSDic
+from constrlts import get_RLT_id
 
 def transTd(td, dics, idmap):
     _id = td['_id']
@@ -6,9 +7,24 @@ def transTd(td, dics, idmap):
     _cat = 'DC2'
     _subcat = '0005' # editable text
     _rels = {}
+    _rlt1 = get_RLT_id('OWNED_BY',_cat, 'PA1')
+    _rlt2 = get_RLT_id('CONTAINED_BY', _cat, 'DC2')
     for k, v in td['iddict'].items():
         if k == "holders":
-            _rels["META-RLT-DC2-PA1-0008"] = v  # RL_OWNED_BY
+            if type(v) == type([]) and len(v) > 0:
+                for i in v:
+                    if i[8:10] == 'PA':
+                        # owned by PA
+                        _rels.setdefault(_rlt1,[]).append(i)
+                    else:
+                        # contained by DC2
+                        _rels.setdefault(_rlt2,[]).append(i)
+        elif k == "holder":
+            if type(v) == type(''):
+                if v[8:10] == 'PA':
+                    _rels.setdefault(_rlt1,[]).append(v)
+                else:
+                    _rels.setdefault(_rlt2,[]).append(v)
     _content = flatLSDic(td['content'])
     dic = {
         '_id': genID(_cid, _cat, _subcat),
